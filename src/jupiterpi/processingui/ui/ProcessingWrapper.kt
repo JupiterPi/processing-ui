@@ -27,11 +27,36 @@ fun PApplet.rect(
     fillColor: Color? = Color.BLACK,
     strokeColor: Color? = null,
     strokeWeight: Float = 10F,
+    borderRadius: Float = 0F,
 ) {
     fill(fillColor)
     stroke(strokeColor)
     strokeWeight(strokeWeight)
-    rect(pos.x, pos.y, width, height)
+
+    if (borderRadius > 0F) {
+        rect(pos.x, pos.y + borderRadius, width, height - 2 * borderRadius)
+        rect(pos.x + borderRadius, pos.y, width - 2 * borderRadius, height)
+        ellipse(pos.x + borderRadius, pos.y + borderRadius, 2 * borderRadius, 2 * borderRadius)
+        ellipse(pos.x + width - borderRadius, pos.y + borderRadius, 2 * borderRadius, 2 * borderRadius)
+        ellipse(pos.x + width - borderRadius, pos.y + height - borderRadius, 2 * borderRadius, 2 * borderRadius)
+        ellipse(pos.x + borderRadius, pos.y + height - borderRadius, 2 * borderRadius, 2 * borderRadius)
+    } else {
+        rect(pos.x, pos.y, width, height)
+    }
+}
+
+fun PApplet.ellipse(
+    pos: PVector,
+    width: Float,
+    height: Float,
+    fillColor: Color? = Color.BLACK,
+    strokeColor: Color? = null,
+    strokeWeight: Float = 10F
+) {
+    fill(fillColor)
+    stroke(strokeColor)
+    strokeWeight(strokeWeight)
+    ellipse(pos.x, pos.y, width, height)
 }
 
 const val TEXT_ALIGN_Y_BOTTOM = 101

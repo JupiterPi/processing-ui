@@ -20,7 +20,7 @@ abstract class Layout(
 
     override fun render(sketch: PApplet) {
         if (context.debugLayouts) sketch.rect(pos, width, height, fillColor = null, strokeColor = Color.RED)
-        if (backgroundColor != null) sketch.rect(pos, width, height, fillColor = backgroundColor)
+        if (backgroundColor != null) sketch.rect(pos, width, height, fillColor = backgroundColor, borderRadius = 10F)
         views.forEach { it.render(sketch) }
     }
 

@@ -49,7 +49,7 @@ open class Button(
     override val width get() = parent?.getChildWidth(this) ?: (40F + context.calculateTextWidth(label(context)))
 
     override fun render(sketch: PApplet) {
-        sketch.rect(pos, width, height)
+        sketch.rect(pos, width, height, borderRadius = 10F)
         sketch.text(
             label(context),
             pos + PVector(20F, 10F),
