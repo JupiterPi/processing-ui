@@ -1,4 +1,4 @@
-package jupiterpi.processingui
+package jupiterpi.processingui.ui
 
 class Context(
     val calculateTextWidth: (text: String) -> Float,

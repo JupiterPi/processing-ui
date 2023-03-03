@@ -1,4 +1,4 @@
-package jupiterpi.processingui
+package jupiterpi.processingui.ui
 
 import processing.core.PApplet
 import processing.core.PVector
