@@ -24,16 +24,24 @@ abstract class Layout(
         views.forEach { it.render(sketch) }
     }
 
-    override fun onclick(clickPos: PVector) {
+    override fun onClick(clickPos: PVector) {
         views.forEach {
-            if (
-                (clickPos.x in it.pos.x..it.pos.x + it.width)
-                && (clickPos.y in it.pos.y..it.pos.y + it.height)
-            ) {
-                it.onclick(clickPos)
+            if (isInside(clickPos, it.pos, it.width, it.height)) it.onClick(clickPos)
+        }
+    }
+
+    override fun onMouseMove(mousePos: PVector?) {
+        views.forEach {
+            if (mousePos != null && isInside(mousePos, it.pos, it.width, it.height)) {
+                it.onMouseMove(mousePos)
+            } else {
+                it.onMouseMove(null)
             }
         }
     }
+
+    private fun isInside(pos: PVector, rectPos: PVector, width: Float, height: Float)
+    = (pos.x in rectPos.x..rectPos.x + width) && (pos.y in rectPos.y..rectPos.y + height)
 
     abstract fun getChildPosition(view: View): PVector?
     abstract fun getChildWidth(view: View): Float?

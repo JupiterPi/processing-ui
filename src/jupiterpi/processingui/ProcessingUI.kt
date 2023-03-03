@@ -29,7 +29,11 @@ class ProcessingUI(
     }
 
     override fun mouseClicked(event: MouseEvent) {
-        windowView.onclick(PVector(event.x.toFloat(), event.y.toFloat()))
+        windowView.onClick(PVector(event.x.toFloat(), event.y.toFloat()))
+    }
+
+    override fun mouseMoved(event: MouseEvent) {
+        windowView.onMouseMove(PVector(event.x.toFloat(), event.y.toFloat()))
     }
 
     private val windowView = object : VerticalLayout(context, "window") {

@@ -18,7 +18,8 @@ abstract class View(
     open val height get() = parent?.getChildHeight(this) ?: defaultHeight
 
     abstract fun render(sketch: PApplet)
-    open fun onclick(clickPos: PVector) {}
+    open fun onClick(clickPos: PVector) {}
+    open fun onMouseMove(mousePos: PVector?) {}
 }
 
 open class Label(
@@ -48,15 +49,21 @@ open class Button(
     override val height: Float = 60F
     override val width get() = parent?.getChildWidth(this) ?: (40F + context.calculateTextWidth(label(context)))
 
+    private var hovered = false
+
     override fun render(sketch: PApplet) {
         sketch.rect(pos, width, height, borderRadius = 10F)
         sketch.text(
             label(context),
             pos + PVector(20F, 10F),
             textSize = 30F,
-            fillColor = Color.WHITE
+            fillColor = if (hovered) Color.LIGHT_GRAY else Color.WHITE
         )
     }
 
-    override fun onclick(clickPos: PVector) = onclick(context, clickPos)
+    override fun onClick(clickPos: PVector) = onclick(context, clickPos)
+
+    override fun onMouseMove(mousePos: PVector?) {
+        hovered = mousePos != null
+    }
 }
