@@ -6,8 +6,10 @@ import java.awt.Color
 import java.util.*
 
 abstract class Layout(
+    context: Context,
     id: String = "layout_${UUID.randomUUID()}",
-) : View(id) {
+    val backgroundColor: Color? = null,
+) : View(id, context) {
     val views = mutableListOf<View>()
 
     operator fun plusAssign(view: View) = appendView(view)
@@ -17,7 +19,8 @@ abstract class Layout(
     }
 
     override fun render(sketch: PApplet) {
-        sketch.rect(pos, width, height, fillColor = null, strokeColor = Color.RED)
+        if (context.debugLayouts) sketch.rect(pos, width, height, fillColor = null, strokeColor = Color.RED)
+        if (backgroundColor != null) sketch.rect(pos, width, height, fillColor = backgroundColor)
         views.forEach { it.render(sketch) }
     }
 
@@ -38,11 +41,18 @@ abstract class Layout(
 }
 
 open class VerticalLayout(
+    context: Context,
     id: String = "vertical_layout_${UUID.randomUUID()}",
     val padding: PVector = PVector(30F, 30F),
     val gap: Float = 30F,
-) : Layout(id) {
-    override val width get() = if (views.isEmpty()) 0F else 2 * padding.x + views.maxOf { it.width }
+    val stretchToWidth: Float? = null,
+    backgroundColor: Color? = null,
+) : Layout(context, id, backgroundColor) {
+    override val width: Float
+    get() {
+        if (stretchToWidth != null) return stretchToWidth
+        return if (views.isEmpty()) 0F else 2 * padding.x + views.maxOf { it.width }
+    }
     override val height get() = if (views.isEmpty()) 0F else 2 * padding.y + views.map { it.height }.sum() + (views.size-1) * gap
 
     override fun getChildPosition(view: View): PVector? {
@@ -55,17 +65,24 @@ open class VerticalLayout(
         }
     }
 
-    override fun getChildWidth(view: View): Float? = null
+    override fun getChildWidth(view: View): Float? = if (stretchToWidth != null) stretchToWidth - 2 * padding.y else null
     override fun getChildHeight(view: View): Float? = null
 }
 
 open class HorizontalLayout(
+    context: Context,
     id: String = "horizontal_layout_${UUID.randomUUID()}",
     val padding: PVector = PVector(30F, 30F),
     val gap: Float = 30F,
-) : Layout(id) {
+    val stretchToHeight: Float? = null,
+    backgroundColor: Color? = null,
+) : Layout(context, id, backgroundColor) {
     override val width get() = if (views.isEmpty()) 0F else 2 * padding.x + views.map { it.width }.sum() + (views.size-1) * gap
-    override val height get() = if (views.isEmpty()) 0F else 2 * padding.y + views.maxOf { it.height }
+    override val height: Float
+    get() {
+        if (stretchToHeight != null) return stretchToHeight
+        return if (views.isEmpty()) 0F else 2 * padding.y + views.maxOf { it.height }
+    }
 
     override fun getChildPosition(view: View): PVector? {
         val index = views.indexOf(view)
@@ -78,5 +95,5 @@ open class HorizontalLayout(
     }
 
     override fun getChildWidth(view: View): Float? = null
-    override fun getChildHeight(view: View): Float? = null
+    override fun getChildHeight(view: View): Float? = if (stretchToHeight != null) stretchToHeight - 2 * padding.x else null
 }

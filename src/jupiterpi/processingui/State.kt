@@ -1,12 +1,15 @@
 package jupiterpi.processingui
 
-class Context {
-    val state = mutableMapOf<String, State>()
-}
+class Context(
+    val calculateTextWidth: (text: String) -> Float,
+    val debugLayouts: Boolean = false,
+) {
+    val states = mutableListOf<Any>()
 
-interface State
-
-class MyState : State {
-    val myValue
-        get() = "hi"
+    inline fun <reified T> getState(): T {
+        for (state in states) {
+            if (state is T) return state
+        }
+        throw Exception("state does not exist")
+    }
 }
